@@ -57,6 +57,7 @@ $ dailyfile [options]
 * `-l, --localtime`          Use localtime for filenames instead of G.M.Time.
 * `-p, --prefix=STRING`      Use the given prefix for filenames instead of "day-".
 * `-s, --suffix=STRING`      Use the given suffix for filenames instead of ".log".
+* `-t, --tee`                Copy display to stdout.
 * `-v, --version`            Display version informations.
 
 Default filenames are `day-YYYY-MM-DD.log` if cycle duration is longer than a day
