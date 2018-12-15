@@ -50,6 +50,7 @@ int main(int argc, char *argv[])
 
 	int cycle_duration = DEFAULT_CYCLE_DURATION;
 	int option_localtime = 0;
+	int option_tee = 0;
 
 	int opt;
 
@@ -76,11 +77,12 @@ int main(int argc, char *argv[])
 		{ "localtime",   no_argument,       NULL, 'l' },
 		{ "prefix",      required_argument, NULL, 'p' },
 		{ "suffix",      required_argument, NULL, 's' },
+		{ "tee",         no_argument,       NULL, 't' },
 		{ "version",     no_argument,       NULL, 'v' },
 		{ NULL,          0,                 NULL,  0  }
 	};
 
-	while ((opt = getopt_long(argc, argv, "b:c:d:hlp:s:v", options, NULL)) != -1) {
+	while ((opt = getopt_long(argc, argv, "b:c:d:hlp:s:tv", options, NULL)) != -1) {
 		switch (opt) {
 			case 'b':
 				if (sscanf(optarg, "%d", &buffer_size) != 1) {
@@ -110,6 +112,7 @@ int main(int argc, char *argv[])
 				fprintf(stderr, "  -l, --localtime          Use localtime for filenames instead of G.M.Time.\n");
 				fprintf(stderr, "  -p, --prefix=STRING      Use the given prefix for filenames instead of \"day-\".\n");
 				fprintf(stderr, "  -s, --suffix=STRING      Use the given suffix for filenames instead of \".log\".\n");
+				fprintf(stderr, "  -t, --tee                Copy display to stdout.\n");
 				fprintf(stderr, "  -v, --version            Display version informations.\n");
 				fprintf(stderr, "  Default filenames are \"day-YYYY-MM-DD.log\" if cycle duration is longer than a day\n");
 				fprintf(stderr, "  and \"day-YYYY-MM-DD-hh-mm-ss.log\" if cycle is shorter than a day.\n");
@@ -122,6 +125,9 @@ int main(int argc, char *argv[])
 				break;
 			case 's':
 				suffix = optarg;
+				break;
+			case 't':
+				option_tee = 1;
 				break;
 			case 'v':
 				fprintf(stderr, "%s v. %s\nCopyright 2017 Christophe Blaess\n", PROGRAM_NAME, PROGRAM_VERSION_STRING);
@@ -218,6 +224,9 @@ int main(int argc, char *argv[])
 			err = 1;
 			break;
 		}
+
+		if (option_tee)
+			fwrite(buffer,len,1,stdout);
 	}
 
 	if (fd >= 0)
@@ -234,4 +243,3 @@ int main(int argc, char *argv[])
 
 	return (err ? EXIT_FAILURE : EXIT_SUCCESS);
 }
-
